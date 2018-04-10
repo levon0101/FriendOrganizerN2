@@ -1,6 +1,7 @@
 ﻿using FriendOrganizer.Model;
 using FriendOrganizerN2.UI.Data;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace FriendOrganizerN2.UI.ViewModel
 {
@@ -18,9 +19,9 @@ namespace FriendOrganizerN2.UI.ViewModel
             _friendDataService = friendDataService;
         }
 
-        public void Load()
+        public async Task LoadAsync()
         {
-            var friends = _friendDataService.GetAll();
+            var friends = await _friendDataService.GetAllAsync();
 
             Friends.Clear();
             foreach (var friend in friends)
