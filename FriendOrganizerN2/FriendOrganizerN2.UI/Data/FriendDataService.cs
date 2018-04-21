@@ -18,12 +18,14 @@ namespace FriendOrganizerN2.UI.Data
         }
 
         //using Named Interator for organize data service
-        public async Task<List<Friend>> GetAllAsync()
+        public async Task<Friend> GetByIdAsync(int friendId)
         { 
             using (var ctx = _contextCreator())
             {
-                return await ctx.Friends.AsNoTracking().ToListAsync();
+                return await ctx.Friends.AsNoTracking().SingleAsync(f=>f.Id == friendId);
             }
         }
+
+
     }
 }
