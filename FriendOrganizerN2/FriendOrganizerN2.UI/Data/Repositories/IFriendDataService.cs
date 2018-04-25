@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using FriendOrganizer.Model;
 
-namespace FriendOrganizerN2.UI.Data
+namespace FriendOrganizerN2.UI.Data.Repositories
 {
-    public interface IFriendDataService
+    public interface IFriendRepository
     {
         Task<Friend> GetByIdAsync(int friendId);
+        Task SaveAsync();
+        bool HasChanges();
     }
 }
