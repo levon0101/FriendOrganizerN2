@@ -15,6 +15,11 @@ namespace FriendOrganizerN2.UI.Data.Repositories
             _context = context;
         }
 
+        public void Add(Friend friend)
+        {
+            _context.Friends.Add(friend);
+        }
+
         //using Named Interator for organize data service
         public async Task<Friend> GetByIdAsync(int friendId)
         {
@@ -25,6 +30,11 @@ namespace FriendOrganizerN2.UI.Data.Repositories
         public bool HasChanges()
         {
             return _context.ChangeTracker.HasChanges();
+        }
+
+        public void Remove(Friend model)
+        {
+            _context.Friends.Remove(model);
         }
 
         public async Task SaveAsync()
