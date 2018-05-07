@@ -16,6 +16,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -31,7 +33,35 @@
         <TextBox Grid.Row="5" Text="{Binding Friend.Email,TargetNullValue='',
             Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 10"/>
 
-        <StackPanel Grid.Row="7" Orientation="Horizontal">
+        <Label Content="Favorite Language" Margin="10 0" Grid.Row="6" />
+        <ComboBox Grid.Row="7"  ItemsSource="{Binding ProgrammingLanguages}" 
+                  DisplayMemberPath="DisplayMember"
+                  SelectedValuePath="Id"
+                  SelectedValue="{Binding Friend.FavoriteLanguageId, Mode=TwoWay}"
+                  Margin="10 0 10 10"/>
+
+        <DockPanel Grid.Row="8" Margin="3">
+            
+            <StackPanel DockPanel.Dock="Right">
+                <Button Content="Add" Width="125" Margin="10"
+                        Command="{Binding AddPhoneNumberCommand}" />
+                <Button Content="Remove" Width="125" Margin="10"
+                        Command="{Binding RemovePhoneNumberCommand}" />
+            </StackPanel>
+
+            <DataGrid ItemsSource="{Binding PhoneNumbers}" SelectedItem="{Binding SelectedPhoneNumber,Mode=TwoWay}"
+                      AutoGenerateColumns="False" RowHeaderWidth="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Phone Numbers" Width="*"
+                                        ElementStyle="{StaticResource DataGridColumnStyle}"
+                                        EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
+                                        Binding="{Binding Number,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>                
+            </DataGrid>
+        </DockPanel>
+        
+        
+        <StackPanel Grid.Row="9" Orientation="Horizontal">
             <Button Command="{Binding SaveCommand}" Content="Save" Width="125" Margin="10"/>
             <Button Command="{Binding DeleteCommand}" Content="Delete" Width="125" Margin="10" />
         </StackPanel>

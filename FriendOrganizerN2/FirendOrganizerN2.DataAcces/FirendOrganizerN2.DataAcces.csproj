@@ -57,6 +57,22 @@
     <Compile Include="Migrations\201804101133056_tblConf.Designer.cs">
       <DependentUpon>201804101133056_tblConf.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804300929523_Added_Programming_Language.cs" />
+    <Compile Include="Migrations\201804300929523_Added_Programming_Language.Designer.cs">
+      <DependentUpon>201804300929523_Added_Programming_Language.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804300948360_Added_Programming_Language_Correct.cs" />
+    <Compile Include="Migrations\201804300948360_Added_Programming_Language_Correct.Designer.cs">
+      <DependentUpon>201804300948360_Added_Programming_Language_Correct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804301051324_Added_Programming_Language_CorrectV2.cs" />
+    <Compile Include="Migrations\201804301051324_Added_Programming_Language_CorrectV2.Designer.cs">
+      <DependentUpon>201804301051324_Added_Programming_Language_CorrectV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804301602514_AddedFriendPhoneNumbers.cs" />
+    <Compile Include="Migrations\201804301602514_AddedFriendPhoneNumbers.Designer.cs">
+      <DependentUpon>201804301602514_AddedFriendPhoneNumbers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +92,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804101133056_tblConf.resx">
       <DependentUpon>201804101133056_tblConf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804300929523_Added_Programming_Language.resx">
+      <DependentUpon>201804300929523_Added_Programming_Language.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804300948360_Added_Programming_Language_Correct.resx">
+      <DependentUpon>201804300948360_Added_Programming_Language_Correct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804301051324_Added_Programming_Language_CorrectV2.resx">
+      <DependentUpon>201804301051324_Added_Programming_Language_CorrectV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804301602514_AddedFriendPhoneNumbers.resx">
+      <DependentUpon>201804301602514_AddedFriendPhoneNumbers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

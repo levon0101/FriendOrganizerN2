@@ -14,19 +14,22 @@ namespace FriendOrganizerN2.UI.ViewModel
     {
         private string _displayMamber;
         private IEventAggregator _eventAggregator;
+        private string _detailViewModelName;
 
         public NavigationItemViewModel(int id, string displayMamber,
+            string detailViewModelName,
             IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            _detailViewModelName = detailViewModelName;
             Id = id;
             DisplayMember = displayMamber;
-            OpenFriendDetailViewCommand = new DelegateCommand(OnOpenFriendDetailView);
+            OpenDetailViewCommand = new DelegateCommand(OnOpenDetailViewExecute);
         }
 
 
         public int Id { get; }
-        
+
         public string DisplayMember
         {
             get { return _displayMamber; }
@@ -37,11 +40,17 @@ namespace FriendOrganizerN2.UI.ViewModel
             }
         }
 
-        public ICommand OpenFriendDetailViewCommand { get;}
-        
-        private void OnOpenFriendDetailView()
+        public ICommand OpenDetailViewCommand { get; }
+
+        private void OnOpenDetailViewExecute()
         {
-            _eventAggregator.GetEvent<OpenFriendDetailViewEvent>().Publish(Id);
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                .Publish(
+                new OpenDetailViewEventArgs
+                {
+                    Id = Id,
+                    ViewModelName = _detailViewModelName
+                });
         }
     }
 }

@@ -11,8 +11,8 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <StackPanel>
-                            <AdornedElementPlaceholder x:Name="placeHolder"/>
-                            <TextBlock FontSize="12" Foreground="Red" Text="{Binding ElementName=placeHolder,
+                            <AdornedElementPlaceholder x:Name="placeholder"/>
+                            <TextBlock FontSize="12" Foreground="Red" Text="{Binding ElementName=placeholder,
                                 Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
                         </StackPanel>
                     </ControlTemplate>
@@ -27,5 +27,28 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="DataGridColumnStyle" TargetType="TextBlock">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="Background" Value="MistyRose" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DataGridEditingColumnStyle" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="Background" Value="MistyRose" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Application.Resources>
 </Application>

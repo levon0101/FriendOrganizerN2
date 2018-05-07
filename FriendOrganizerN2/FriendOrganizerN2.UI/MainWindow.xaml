@@ -7,7 +7,8 @@
         xmlns:view="clr-namespace:FriendOrganizerN2.UI.View"
         xmlns:viewModel="clr-namespace:FriendOrganizerN2.UI.ViewModel"
         mc:Ignorable="d"
-        Title="FriendOrganizerN2" Height="450" Width="800" FontSize="20">
+        Title="FriendOrganizerN2" Height="700" Width="1000" FontSize="20"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:FriendDetailViewModel}">
             <view:FriendDetailView/>
@@ -26,12 +27,13 @@
 
         <Menu Grid.ColumnSpan="2" FontSize="20">
             <MenuItem Header="Create">
-                <MenuItem Header="New Friend" Command="{Binding CreateNewFriendCommand}" />
+                <MenuItem Header="New Friend" Command="{Binding CreateNewDetailCommand}" 
+                          CommandParameter="{x:Type viewModel:FriendDetailViewModel}"/>
             </MenuItem>
         </Menu>
         
         <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="1"/>
-        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding FriendDetailViewModel}" />
+        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding DetailViewModel}" />
 
     </Grid>
 </Window>
