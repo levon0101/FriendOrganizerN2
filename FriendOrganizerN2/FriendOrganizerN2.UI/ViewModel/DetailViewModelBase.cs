@@ -30,7 +30,8 @@ namespace FriendOrganizerN2.UI.ViewModel
         public bool HasChanges
         {
             get { return _hasChanges; }
-            set {
+            set
+            {
                 _hasChanges = value;
                 OnPropertyChanged();
                 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -45,11 +46,12 @@ namespace FriendOrganizerN2.UI.ViewModel
 
         protected virtual void RaiseDetailDeletedEvent(int modelId)
         {
-            EventAggregator.GetEvent<AfterDetailDeletedEvent>().Publish(new AfterDetailDeletedEventArgs
-            {
-                Id = modelId,
-                ViewModelName = this.GetType().Name
-            });
+            EventAggregator.GetEvent<AfterDetailDeletedEvent>().Publish(
+                new AfterDetailDeletedEventArgs
+                {
+                    Id = modelId,
+                    ViewModelName = this.GetType().Name
+                });
         }
 
         protected virtual void RaiseDetailSavedEvent(int modelId, string displayMember)

@@ -22,7 +22,7 @@ namespace FriendOrganizerN2.UI
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
 
-            var mainWindow = container.Resolve<MainWindow>();
+             var mainWindow = container.Resolve<MainWindow>();
 
             mainWindow.Show();
         }

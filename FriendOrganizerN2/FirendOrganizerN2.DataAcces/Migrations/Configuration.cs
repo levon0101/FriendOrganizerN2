@@ -2,6 +2,7 @@ namespace FirendOrganizerN2.DataAcces.Migrations
 {
     using FriendOrganizer.Model;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Validation;
@@ -36,10 +37,28 @@ namespace FirendOrganizerN2.DataAcces.Migrations
                     );
             context.SaveChanges();
 
+
             context.FriendPhoneNumbers.AddOrUpdate(
               pl => pl.Number,
               new FriendPhoneNumber { Number = "+374 55 979 969", FriendId = context.Friends.First().Id }
               );
+
+            context.Meetings.AddOrUpdate(
+               m => m.Title,
+                   new Meeting
+                   {
+                       Title = "Wathc Soccer",
+                       DateFrom = new DateTime(2018, 5, 9),
+                       DateTo = new DateTime(2018, 5, 10),
+                       Friends = new List<Friend>
+                       {
+                           context.Friends.Single(f=>f.FirstName == "Rafael"),
+                           context.Friends.Single(f=>f.FirstName == "Karen")
+                       }
+                   }
+                   );
+            context.SaveChanges();
+
 
         }
     }
