@@ -16,7 +16,6 @@
         <DataTemplate DataType="{x:Type viewModel:MeetingDetailViewModel}">
             <view:MeetingDetailView/>
         </DataTemplate>
-
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,7 +38,21 @@
         </Menu>
         
         <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="1"/>
-        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding DetailViewModel}" />
+
+        <TabControl Grid.Column="1" Grid.Row="1" ItemsSource="{Binding DetailViewModels}" 
+                    SelectedItem="{Binding SelectedDetailViewModel, Mode=TwoWay}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="{Binding Title}" />
+                        <TextBlock Text="*" Visibility="{Binding HasChanges, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        <Button Command="{Binding CloseDetailViewModelCommand}" VerticalAlignment="Top"
+                                Margin="2" Content="x" FontSize="20" />
+
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
 
     </Grid>
 </Window>

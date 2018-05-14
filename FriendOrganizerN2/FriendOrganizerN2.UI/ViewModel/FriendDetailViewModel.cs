@@ -21,7 +21,6 @@ namespace FriendOrganizerN2.UI.ViewModel
     public class FriendDetailViewModel : DetailViewModelBase, IFriendDetailViewModel
     {
         private IFriendRepository _friendRepository; 
-        private IMessageDialogService _messageDialogService;
         private FriendPhoneNumberWrapper _selectedPhoneNumber;
         private IProgrammingLanguageLookupDataService _programmingLanguageLookupDataService;
         private FriendWrapper _friend;
@@ -30,10 +29,9 @@ namespace FriendOrganizerN2.UI.ViewModel
              IEventAggregator eventAggregator,
              IMessageDialogService messageDialogService,
              IProgrammingLanguageLookupDataService programmingLanguageLookupDataService)
-            :base(eventAggregator)
+            :base(eventAggregator,messageDialogService)
         {
             _friendRepository = friendRepository;
-            _messageDialogService = messageDialogService;
             _programmingLanguageLookupDataService = programmingLanguageLookupDataService;
              
             AddPhoneNumberCommand = new DelegateCommand(OnAddPhoneNumberCommand);
@@ -44,11 +42,13 @@ namespace FriendOrganizerN2.UI.ViewModel
         }
         
 
-        public override async Task LoadAsync(int? friendId)
+        public override async Task LoadAsync(int friendId)
         {
-            var friend = friendId.HasValue
-               ? await _friendRepository.GetByIdAsync(friendId.Value)
+            var friend = friendId > 0
+               ? await _friendRepository.GetByIdAsync(friendId)
                : CreateNewFriend();
+
+            Id = friendId;
 
             InitializeFriend(friendId, friend);
             InitializeFriendPhoneNumbers(friend.PhoneNumbers);
@@ -97,6 +97,11 @@ namespace FriendOrganizerN2.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if (e.PropertyName == nameof(Friend.FirstName) 
+                    || e.PropertyName == nameof(Friend.LastName))
+                {
+                    SetTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
 
@@ -104,6 +109,13 @@ namespace FriendOrganizerN2.UI.ViewModel
             {
                 Friend.FirstName = ""; // For Trigger validation
             }
+
+            SetTitle();
+        }
+
+        private void SetTitle()
+        {
+            Title = $"{Friend.FirstName} {Friend.LastName}";
         }
 
         private async Task LoadProgrammingLanguagesLookupAsync()
@@ -149,6 +161,8 @@ namespace FriendOrganizerN2.UI.ViewModel
             await _friendRepository.SaveAsync();
 
             HasChanges = _friendRepository.HasChanges();
+
+            Id = Friend.Id;
             RaiseDetailSavedEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
             
         }
@@ -163,7 +177,14 @@ namespace FriendOrganizerN2.UI.ViewModel
 
         protected override async void OnDeleteExecute()
         {
-            var result = _messageDialogService.ShowOkCancelDialog($"Do you realy want to delete friend {Friend.FirstName} ?", "Question");
+            if(await _friendRepository.HasMeetingAync(Friend.Id))
+            {
+                MessageDialogService.ShowInfo($"{Friend.FirstName} can't be deleted, becouse " +
+                    $"he is part of Meeting ");
+                return;
+            }
+
+            var result = MessageDialogService.ShowOkCancelDialog($"Do you realy want to delete friend {Friend.FirstName} ?", "Question");
             if (result == MessageDialogResult.OK)
             {
                 _friendRepository.Remove(Friend.Model);
