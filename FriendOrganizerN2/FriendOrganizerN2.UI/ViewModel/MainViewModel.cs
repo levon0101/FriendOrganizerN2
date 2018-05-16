@@ -36,18 +36,18 @@ namespace FriendOrganizerN2.UI.ViewModel
             _eventAggregator.GetEvent<AfterDetailClosedEvent>().Subscribe(AfterDetailClosed);
 
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
-
+            OpenSingleDetailViewCommand = new DelegateCommand<Type>(OnOpenSingleDetailViewExecute);
             NavigationViewModel = navigationViewModel;
 
         }
 
-        
         public async Task LoadAsync()
         {
             await NavigationViewModel.LoadAsync();
         }
 
         public ICommand CreateNewDetailCommand { get; }
+        public ICommand OpenSingleDetailViewCommand { get; }
         public INavigationViewModel NavigationViewModel { get; }
 
         public ObservableCollection<IDetailViewModel> DetailViewModels { get; }
@@ -65,17 +65,9 @@ namespace FriendOrganizerN2.UI.ViewModel
 
         private async void OnOpenDetailView(OpenDetailViewEventArgs args)
         {
-            //if (SelectedDetailViewModel != null && SelectedDetailViewModel.HasChanges)
-            //{
-            //    var result = _messageDialogService.ShowOkCancelDialog("You have made changes, Navigate away?", "Question");
-            //    if (result == MessageDialogResult.Cancel)
-            //    {
-            //        return;
-            //    }
-            //}
 
             var detailViewModel = DetailViewModels.SingleOrDefault(vm => vm.Id == args.Id
-                                && vm.GetType().Name == args.ViewModelName);
+                    && vm.GetType().Name == args.ViewModelName);
 
             if (detailViewModel == null)
             {
@@ -91,7 +83,22 @@ namespace FriendOrganizerN2.UI.ViewModel
         private int nextNewItemId = 0;
         private void OnCreateNewDetailExecute(Type viewModelType)
         {
-            OnOpenDetailView(new OpenDetailViewEventArgs { Id = nextNewItemId--, ViewModelName = viewModelType.Name });
+            OnOpenDetailView(
+                new OpenDetailViewEventArgs
+                {
+                    Id = nextNewItemId,
+                    ViewModelName = viewModelType.Name
+                });
+        }
+
+        private void OnOpenSingleDetailViewExecute(Type viewModelType)
+        {
+            OnOpenDetailView(
+                new OpenDetailViewEventArgs
+            {
+                Id = -1,
+                ViewModelName = viewModelType.Name
+            });
         }
 
         private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
@@ -114,6 +121,7 @@ namespace FriendOrganizerN2.UI.ViewModel
                 DetailViewModels.Remove(detailViewModel);
             }
         }
+
 
 
     }
