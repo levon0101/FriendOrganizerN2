@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace FriendOrganizerN2.UI.ViewModel
 {
     public class FriendDetailViewModel : DetailViewModelBase, IFriendDetailViewModel
     {
-        private IFriendRepository _friendRepository; 
+        private IFriendRepository _friendRepository;
         private FriendPhoneNumberWrapper _selectedPhoneNumber;
         private IProgrammingLanguageLookupDataService _programmingLanguageLookupDataService;
         private FriendWrapper _friend;
@@ -29,7 +30,7 @@ namespace FriendOrganizerN2.UI.ViewModel
              IEventAggregator eventAggregator,
              IMessageDialogService messageDialogService,
              IProgrammingLanguageLookupDataService programmingLanguageLookupDataService)
-            :base(eventAggregator,messageDialogService)
+            : base(eventAggregator, messageDialogService)
         {
             _friendRepository = friendRepository;
             _programmingLanguageLookupDataService = programmingLanguageLookupDataService;
@@ -43,7 +44,7 @@ namespace FriendOrganizerN2.UI.ViewModel
             PhoneNumbers = new ObservableCollection<FriendPhoneNumberWrapper>();
         }
 
-        
+
         public override async Task LoadAsync(int friendId)
         {
             var friend = friendId > 0
@@ -99,7 +100,7 @@ namespace FriendOrganizerN2.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
-                if (e.PropertyName == nameof(Friend.FirstName) 
+                if (e.PropertyName == nameof(Friend.FirstName)
                     || e.PropertyName == nameof(Friend.LastName))
                 {
                     SetTitle();
@@ -151,22 +152,24 @@ namespace FriendOrganizerN2.UI.ViewModel
                 ((DelegateCommand)RemovePhoneNumberCommand).RaiseCanExecuteChanged();
             }
         }
-        
+
         public ICommand AddPhoneNumberCommand { get; }
         public ICommand RemovePhoneNumberCommand { get; }
-        
+
         public ObservableCollection<LookupItem> ProgrammingLanguages { get; }
         public ObservableCollection<FriendPhoneNumberWrapper> PhoneNumbers { get; }
 
         protected override async void OnSaveExecute()
         {
-            await _friendRepository.SaveAsync();
+            await SaveWithOptimistcConcurencyAsync(_friendRepository.SaveAsync,
+                () =>
+                {
+                    HasChanges = _friendRepository.HasChanges();
 
-            HasChanges = _friendRepository.HasChanges();
-
-            Id = Friend.Id;
-            RaiseDetailSavedEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
-            
+                    Id = Friend.Id;
+                    RaiseDetailSavedEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
+                });
+                  
         }
 
         protected override bool OnSaveCanExecute()
@@ -179,7 +182,7 @@ namespace FriendOrganizerN2.UI.ViewModel
 
         protected override async void OnDeleteExecute()
         {
-            if(await _friendRepository.HasMeetingAync(Friend.Id))
+            if (await _friendRepository.HasMeetingAync(Friend.Id))
             {
                 MessageDialogService.ShowInfo($"{Friend.FirstName} can't be deleted, becouse " +
                     $"he is part of Meeting ");
@@ -230,11 +233,11 @@ namespace FriendOrganizerN2.UI.ViewModel
 
         private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
         {
-            if(args.ViewModelName == nameof(ProgrammingLanguageDetailViewModel))
+            if (args.ViewModelName == nameof(ProgrammingLanguageDetailViewModel))
             {
                 await LoadProgrammingLanguagesLookupAsync();
             }
         }
-        
+
     }
 }
