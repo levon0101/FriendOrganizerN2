@@ -184,12 +184,12 @@ namespace FriendOrganizerN2.UI.ViewModel
         {
             if (await _friendRepository.HasMeetingAync(Friend.Id))
             {
-                MessageDialogService.ShowInfo($"{Friend.FirstName} can't be deleted, becouse " +
+                await MessageDialogService.ShowInfoAsync($"{Friend.FirstName} can't be deleted, becouse " +
                     $"he is part of Meeting ");
                 return;
             }
 
-            var result = MessageDialogService.ShowOkCancelDialog($"Do you realy want to delete friend {Friend.FirstName} ?", "Question");
+            var result = await MessageDialogService.ShowOkCancelDialogAsync($"Do you realy want to delete friend {Friend.FirstName} ?", "Question");
             if (result == MessageDialogResult.OK)
             {
                 _friendRepository.Remove(Friend.Model);

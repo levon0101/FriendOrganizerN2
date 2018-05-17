@@ -61,7 +61,7 @@
         </DockPanel>
         
         
-        <StackPanel Grid.Row="9" Orientation="Horizontal">
+        <StackPanel Grid.Row="9" Orientation="Horizontal" >
             <Button Command="{Binding SaveCommand}" Content="Save" Width="125" Margin="10"/>
             <Button Command="{Binding DeleteCommand}" Content="Delete" Width="125" Margin="10" />
         </StackPanel>

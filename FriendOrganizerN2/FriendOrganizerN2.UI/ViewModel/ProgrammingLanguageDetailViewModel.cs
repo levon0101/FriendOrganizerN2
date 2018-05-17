@@ -108,7 +108,7 @@ namespace FriendOrganizerN2.UI.ViewModel
                 {
                     ex = ex.InnerException;
                 }
-                MessageDialogService.ShowInfo($"Error while saving the entities," +
+                await MessageDialogService.ShowInfoAsync($"Error while saving the entities," +
                     $"the data will be reloaded. Details: {ex.Message}");
                 await LoadAsync(Id);
             }
@@ -134,7 +134,7 @@ namespace FriendOrganizerN2.UI.ViewModel
 
             if (isRefered)
             {
-                MessageDialogService.ShowInfo($"The Language {SelectedProgrammingLanguage.Name} " +
+                await MessageDialogService.ShowInfoAsync($"The Language {SelectedProgrammingLanguage.Name} " +
                     $"can't be removed bcoz it is refered by at least of friend");
                 return;
             }

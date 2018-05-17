@@ -98,14 +98,14 @@ namespace FriendOrganizerN2.UI.ViewModel
 
 
 
-        protected override void OnDeleteExecute()
+        protected async override void OnDeleteExecute()
         {
-            var result = MessageDialogService
-                .ShowOkCancelDialog($"Do you Realy want to delete this meeting {Meeting.Title}?", "Question");
+            var result = await MessageDialogService
+                .ShowOkCancelDialogAsync($"Do you Realy want to delete this meeting {Meeting.Title}?", "Question");
             if (result == MessageDialogResult.OK)
             {
                 _meetingRepository.Remove(Meeting.Model);
-                _meetingRepository.SaveAsync();
+                await _meetingRepository.SaveAsync();
                 RaiseDetailDeletedEvent(Meeting.Id);
             }
         }
