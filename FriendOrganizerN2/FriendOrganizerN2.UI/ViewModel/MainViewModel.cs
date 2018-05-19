@@ -9,6 +9,8 @@ using System.Windows.Input;
 using Autofac.Features.Indexed;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media;
+using FriendOrganizerN2.UI.Extentions;
 
 namespace FriendOrganizerN2.UI.ViewModel
 {
@@ -37,8 +39,27 @@ namespace FriendOrganizerN2.UI.ViewModel
 
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
             OpenSingleDetailViewCommand = new DelegateCommand<Type>(OnOpenSingleDetailViewExecute);
+            DetailMouserOverCommand = new DelegateCommand<Type>(OnDetailMouserOverExecute);
+            hamburgClickCommand = new DelegateCommand<Type>(OnhamburgClickExecute);
             NavigationViewModel = navigationViewModel;
 
+        }
+
+        private void OnhamburgClickExecute(Type obj)
+        {
+
+            MainWindowView.navigationTransform.AnimateTo(new Point());
+        }
+
+        private void OnDetailMouserOverExecute(Type obj)
+        {
+            GeneralTransform generalTransform = MainWindowView.TransformToVisual(MainWindowView.navigationGrid);
+            Point point = generalTransform.Transform(new Point());
+
+            point.X += MainWindowView.navigationTransform.X - MainWindowView.navigationColumn.ActualWidth;
+            point.Y = 0; // for transforming only X axis
+            MainWindowView.navigationTransform.AnimateTo(point);
+        
         }
 
         public async Task LoadAsync()
@@ -46,8 +67,11 @@ namespace FriendOrganizerN2.UI.ViewModel
             await NavigationViewModel.LoadAsync();
         }
 
+        public MainWindow MainWindowView;
         public ICommand CreateNewDetailCommand { get; }
         public ICommand OpenSingleDetailViewCommand { get; }
+        public ICommand DetailMouserOverCommand { get; }
+        public ICommand hamburgClickCommand { get; }
         public INavigationViewModel NavigationViewModel { get; }
 
         public ObservableCollection<IDetailViewModel> DetailViewModels { get; }

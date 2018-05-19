@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:FriendOrganizerN2.UI"
         xmlns:view="clr-namespace:FriendOrganizerN2.UI.View"
         xmlns:viewModel="clr-namespace:FriendOrganizerN2.UI.ViewModel"
@@ -26,13 +27,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>-->
 
 
-        <Menu Grid.ColumnSpan="2" FontSize="20">
+        <Menu Grid.ColumnSpan="3" FontSize="20">
             <MenuItem Header="Create">
                 <MenuItem Header="New Friend" Command="{Binding CreateNewDetailCommand}" 
                           CommandParameter="{x:Type viewModel:FriendDetailViewModel}"/>
@@ -44,31 +46,75 @@
                           CommandParameter="{x:Type viewModel:ProgrammingLanguageDetailViewModel}"/>
             </MenuItem>
         </Menu>
-        
-        <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="1"/>
 
-        <TabControl Grid.Column="1" Grid.Row="1" ItemsSource="{Binding DetailViewModels}" 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <!--<Controls:HamburgerMenu PaneBackground="Black" x:Name="HamburgerMenuControl"
+                    Foreground="White"   OpenPaneLength="240"
+                    DisplayMode="CompactInline" CompactPaneLength="48"
+                    HamburgerHeight="48" IsPaneOpen="False">
+
+            </Controls:HamburgerMenu>-->
+
+            <!--DetailView-->
+            <TabControl Grid.Column="1"  ItemsSource="{Binding DetailViewModels}" 
                     SelectedItem="{Binding SelectedDetailViewModel, Mode=TwoWay}">
-            <TabControl.ItemContainerStyle>
-                <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
-                    <Setter Property="Background" Value="#333333" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                    <Setter Property="BorderThickness" Value="2" />
-                </Style>
-            </TabControl.ItemContainerStyle>
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" >
-                        <TextBlock Text="{Binding Title}" />
-                        <TextBlock Text="*" Visibility="{Binding HasChanges, Converter={StaticResource booleanToVisibilityConverter}}"/>
-                        <Button Command="{Binding CloseDetailViewModelCommand}" VerticalAlignment="Top"
+                <i:Interaction.Triggers>
+
+                    <i:EventTrigger EventName="MouseEnter">
+
+                        <i:InvokeCommandAction Command="{Binding DetailMouserOverCommand}"   />
+
+                    </i:EventTrigger>
+
+                </i:Interaction.Triggers>
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                        <Setter Property="Background" Value="#333333" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="2" />
+                    </Style>
+                </TabControl.ItemContainerStyle>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="{Binding Title}" />
+                            <TextBlock Text="*" Visibility="{Binding HasChanges, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                            <Button Command="{Binding CloseDetailViewModelCommand}" VerticalAlignment="Top"
                                 Margin="5 -2 0 0" Content="X" FontSize="20"
                                 Style="{StaticResource ChromelessButtonStyle}"/>
 
-                    </StackPanel>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-        </TabControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+            </TabControl>
 
+            <!--Navigation Grid-->
+            <Grid x:Name="navigationGrid" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" x:Name="navigationColumn"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="navigationTransform"/>
+                </Grid.RenderTransform>
+                
+                <GridSplitter HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Width="5"/>
+
+                <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="1"/>
+
+            </Grid>
+
+            <!--Hamburger Menu -->
+            <Button Command="{Binding hamburgClickCommand}"
+                FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Style="{StaticResource ChromelessButtonStyle}"
+                    VerticalAlignment="Top" Margin="5"/>
+
+        </Grid>
     </Grid>
 </Controls:MetroWindow>

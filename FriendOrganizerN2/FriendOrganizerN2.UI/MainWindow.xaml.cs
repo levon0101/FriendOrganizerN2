@@ -15,6 +15,7 @@ namespace FriendOrganizerN2.UI
         {
             InitializeComponent();
             _viewModel = viewModel;
+            _viewModel.MainWindowView = this;
             DataContext = _viewModel;
 
             Loaded += MainWindow_Loaded;
@@ -24,5 +25,7 @@ namespace FriendOrganizerN2.UI
         {
            await  _viewModel.LoadAsync();
         }
+
+
     }
 }
