@@ -2,12 +2,15 @@
 using FriendOrganizerN2.UI.Data;
 using FriendOrganizerN2.UI.Data.Lookups;
 using FriendOrganizerN2.UI.Event;
+using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace FriendOrganizerN2.UI.ViewModel
 {
@@ -17,11 +20,12 @@ namespace FriendOrganizerN2.UI.ViewModel
         private IEventAggregator _eventAggregator;
         private IMeetingLookupDataService _meetingLookupService;
 
+       
         public ObservableCollection<NavigationItemViewModel> Friends { get; }
 
         public ObservableCollection<NavigationItemViewModel> Meetings { get; }
 
-//-----------------------------Constructor
+        //-----------------------------Constructor
         public NavigationViewModel(IFriendLookupDataService friendLookupDataService,
             IEventAggregator eventAggregator,
             IMeetingLookupDataService meetingLookupService)
@@ -29,6 +33,8 @@ namespace FriendOrganizerN2.UI.ViewModel
             _friendLookupDataService = friendLookupDataService;
             _eventAggregator = eventAggregator;
             _meetingLookupService = meetingLookupService;
+            
+
 
             Friends = new ObservableCollection<NavigationItemViewModel>();
             Meetings = new ObservableCollection<NavigationItemViewModel>();
@@ -36,9 +42,11 @@ namespace FriendOrganizerN2.UI.ViewModel
             _eventAggregator.GetEvent<AfterDetailSavedEvent>().Subscribe(AfterDetailSaved);
             _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
         }
-
+        
         public async Task LoadAsync()
         {
+            // Thread.Sleep(5000);
+            await Task.Delay(3000);
             var lookup = await _friendLookupDataService.GetFreindLookupAsync();
             Friends.Clear();
             foreach (var item in lookup)

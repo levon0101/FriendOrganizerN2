@@ -26,6 +26,5 @@ namespace FriendOrganizerN2.UI
            await  _viewModel.LoadAsync();
         }
 
-
     }
 }

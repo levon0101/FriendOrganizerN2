@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FriendOrganizerN2.UI.Data.Lookups
@@ -22,6 +23,7 @@ namespace FriendOrganizerN2.UI.Data.Lookups
 
         public async Task<IEnumerable<LookupItem>> GetFreindLookupAsync()
         {
+
             using (var ctx = _contextCreator())
             {
                 return await ctx.Friends.AsNoTracking()

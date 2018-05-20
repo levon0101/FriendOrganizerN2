@@ -19,6 +19,7 @@ namespace FriendOrganizerN2.UI.ViewModel
         private IDetailViewModel _selectedDetailViewModel;
         private IEventAggregator _eventAggregator;
         private IIndex<string, IDetailViewModel> _detailViewModelCreator;
+        private bool _isLoading;
 
         private IMessageDialogService _messageDialogService;
 
@@ -33,6 +34,7 @@ namespace FriendOrganizerN2.UI.ViewModel
 
             DetailViewModels = new ObservableCollection<IDetailViewModel>();
 
+
             _eventAggregator.GetEvent<OpenDetailViewEvent>().Subscribe(OnOpenDetailView);
             _eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
             _eventAggregator.GetEvent<AfterDetailClosedEvent>().Subscribe(AfterDetailClosed);
@@ -40,31 +42,44 @@ namespace FriendOrganizerN2.UI.ViewModel
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
             OpenSingleDetailViewCommand = new DelegateCommand<Type>(OnOpenSingleDetailViewExecute);
             DetailMouserOverCommand = new DelegateCommand<Type>(OnDetailMouserOverExecute);
-            hamburgClickCommand = new DelegateCommand<Type>(OnhamburgClickExecute);
+            hamburgClickCommand = new DelegateCommand(OnhamburgClickExecute);
+            PinClickCommand = new DelegateCommand(OnPinClickedExecute);
+
             NavigationViewModel = navigationViewModel;
 
         }
 
-        private void OnhamburgClickExecute(Type obj)
+        private bool isPinned = false;
+        private void OnPinClickedExecute()
         {
+            if (isPinned)
+            {
+                isPinned = false;
+                OnhamburgClickExecute();
+                //MainWindowView.pinToggleBtn.Content = "&#xE840;";
+                //MainWindowView.pinToggleBtn.FontFamily = 
+                if (!MainWindowView.mainAreaGrid.ColumnDefinitions.Contains(MainWindowView.columnAddOrRemove))
+                {
+                    MainWindowView.mainAreaGrid.ColumnDefinitions.Insert(0, MainWindowView.columnAddOrRemove);
+                }
+            }
+            else
+            {
+                isPinned = true;
+                MainWindowView.pinToggleBtn.Content = "&#xE718;";
+                if (MainWindowView.mainAreaGrid.ColumnDefinitions.Contains(MainWindowView.columnAddOrRemove))
+                {
+                    MainWindowView.mainAreaGrid.ColumnDefinitions.Remove(MainWindowView.columnAddOrRemove);
+                }
+            }
 
-            MainWindowView.navigationTransform.AnimateTo(new Point());
-        }
-
-        private void OnDetailMouserOverExecute(Type obj)
-        {
-            GeneralTransform generalTransform = MainWindowView.TransformToVisual(MainWindowView.navigationGrid);
-            Point point = generalTransform.Transform(new Point());
-
-            point.X += MainWindowView.navigationTransform.X - MainWindowView.navigationColumn.ActualWidth;
-            point.Y = 0; // for transforming only X axis
-            MainWindowView.navigationTransform.AnimateTo(point);
-        
         }
 
         public async Task LoadAsync()
         {
+            IsLoading = true;
             await NavigationViewModel.LoadAsync();
+            IsLoading = false;
         }
 
         public MainWindow MainWindowView;
@@ -72,7 +87,20 @@ namespace FriendOrganizerN2.UI.ViewModel
         public ICommand OpenSingleDetailViewCommand { get; }
         public ICommand DetailMouserOverCommand { get; }
         public ICommand hamburgClickCommand { get; }
+        public ICommand PinClickCommand { get; }
         public INavigationViewModel NavigationViewModel { get; }
+
+
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<IDetailViewModel> DetailViewModels { get; }
 
@@ -99,7 +127,7 @@ namespace FriendOrganizerN2.UI.ViewModel
                 try
                 {
 
-                await detailViewModel.LoadAsync(args.Id);
+                    await detailViewModel.LoadAsync(args.Id);
                 }
                 catch
                 {
@@ -131,10 +159,10 @@ namespace FriendOrganizerN2.UI.ViewModel
         {
             OnOpenDetailView(
                 new OpenDetailViewEventArgs
-            {
-                Id = -1,
-                ViewModelName = viewModelType.Name
-            });
+                {
+                    Id = -1,
+                    ViewModelName = viewModelType.Name
+                });
         }
 
         private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
@@ -159,6 +187,27 @@ namespace FriendOrganizerN2.UI.ViewModel
         }
 
 
+
+        private void OnhamburgClickExecute()
+        {
+
+            MainWindowView.navigationTransform.AnimateTo(new Point());
+        }
+
+        private void OnDetailMouserOverExecute(Type obj)
+        {
+            if (isPinned)
+            {
+                GeneralTransform generalTransform = MainWindowView.TransformToVisual(MainWindowView.navigationGrid);
+                Point point = generalTransform.Transform(new Point());
+
+                point.X += MainWindowView.navigationTransform.X - MainWindowView.navigationColumn.ActualWidth;
+                point.Y = 0; // for transforming only X axis
+                MainWindowView.navigationTransform.AnimateTo(point);
+
+            }
+
+        }
 
     }
 }

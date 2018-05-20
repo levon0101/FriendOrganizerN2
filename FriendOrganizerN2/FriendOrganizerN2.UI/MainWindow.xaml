@@ -23,98 +23,117 @@
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <!--<Grid.ColumnDefinitions>
+
+        <!--Content-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>-->
 
 
-        <Menu Grid.ColumnSpan="3" FontSize="20">
-            <MenuItem Header="Create">
-                <MenuItem Header="New Friend" Command="{Binding CreateNewDetailCommand}" 
+            <Menu Grid.ColumnSpan="3" FontSize="20">
+                <MenuItem Header="Create">
+                    <MenuItem Header="New Friend" Command="{Binding CreateNewDetailCommand}" 
                           CommandParameter="{x:Type viewModel:FriendDetailViewModel}"/>
-                <MenuItem Header="New Meetings" Command="{Binding CreateNewDetailCommand}" 
+                    <MenuItem Header="New Meetings" Command="{Binding CreateNewDetailCommand}" 
                           CommandParameter="{x:Type viewModel:MeetingDetailViewModel}"/>
-            </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Header="Programming Languages" Command="{Binding OpenSingleDetailViewCommand}"
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem Header="Programming Languages" Command="{Binding OpenSingleDetailViewCommand}"
                           CommandParameter="{x:Type viewModel:ProgrammingLanguageDetailViewModel}"/>
-            </MenuItem>
-        </Menu>
+                </MenuItem>
+            </Menu>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="1" Background="Black" Grid.IsSharedSizeScope="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-
-            <!--<Controls:HamburgerMenu PaneBackground="Black" x:Name="HamburgerMenuControl"
-                    Foreground="White"   OpenPaneLength="240"
-                    DisplayMode="CompactInline" CompactPaneLength="48"
-                    HamburgerHeight="48" IsPaneOpen="False">
-
-            </Controls:HamburgerMenu>-->
-
-            <!--DetailView-->
-            <TabControl Grid.Column="1"  ItemsSource="{Binding DetailViewModels}" 
+                <!--DetailView-->
+                <Grid x:Name="mainAreaGrid" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="columnAddOrRemove" SharedSizeGroup="navigationGroup"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TabControl Grid.Column="1"  ItemsSource="{Binding DetailViewModels}" 
                     SelectedItem="{Binding SelectedDetailViewModel, Mode=TwoWay}">
-                <i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
 
-                    <i:EventTrigger EventName="MouseEnter">
+                            <i:EventTrigger EventName="MouseEnter">
 
-                        <i:InvokeCommandAction Command="{Binding DetailMouserOverCommand}"   />
+                                <i:InvokeCommandAction Command="{Binding DetailMouserOverCommand}"   />
 
-                    </i:EventTrigger>
+                            </i:EventTrigger>
 
-                </i:Interaction.Triggers>
-                <TabControl.ItemContainerStyle>
-                    <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
-                        <Setter Property="Background" Value="#333333" />
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="BorderThickness" Value="2" />
-                    </Style>
-                </TabControl.ItemContainerStyle>
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" >
-                            <TextBlock Text="{Binding Title}" />
-                            <TextBlock Text="*" Visibility="{Binding HasChanges, Converter={StaticResource booleanToVisibilityConverter}}"/>
-                            <Button Command="{Binding CloseDetailViewModelCommand}" VerticalAlignment="Top"
+                        </i:Interaction.Triggers>
+                        <TabControl.ItemContainerStyle>
+                            <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                                <Setter Property="Background" Value="#333333" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="2" />
+                            </Style>
+                        </TabControl.ItemContainerStyle>
+                        <TabControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="{Binding Title}" />
+                                    <TextBlock Text="*" Visibility="{Binding HasChanges, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                                    <Button Command="{Binding CloseDetailViewModelCommand}" VerticalAlignment="Top"
                                 Margin="5 -2 0 0" Content="X" FontSize="20"
                                 Style="{StaticResource ChromelessButtonStyle}"/>
 
-                        </StackPanel>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-            </TabControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </TabControl.ItemTemplate>
+                    </TabControl>
+                </Grid>
 
-            <!--Navigation Grid-->
-            <Grid x:Name="navigationGrid" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" x:Name="navigationColumn"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RenderTransform>
-                    <TranslateTransform x:Name="navigationTransform"/>
-                </Grid.RenderTransform>
-                
-                <GridSplitter HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Width="5"/>
 
-                <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="1"/>
+                <!--Navigation Grid-->
+                <Grid x:Name="navigationGrid" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" x:Name="navigationColumn" SharedSizeGroup="navigationGroup"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="navigationTransform"/>
+                    </Grid.RenderTransform>
 
+                    <GridSplitter HorizontalAlignment="Left" Grid.Column="1" Width="2"/>
+
+                    <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="1"/>
+
+                </Grid>
+
+                <!--Hamburger menu & pin-->
+                <StackPanel>
+                    <!--Hamburger Menu -->
+                    <Button Command="{Binding hamburgClickCommand}" VerticalAlignment="Top" Margin="5"
+                         FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Style="{StaticResource ChromelessButtonStyle}"
+                    />
+                    <ToggleButton x:Name="pinToggleBtn" Command="{Binding PinClickCommand}" Grid.Column="1"
+                            Style="{StaticResource ChromelessButtonStyle}" VerticalAlignment="Top" Margin="5" >
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Label x:Name="lbl" Content="&#xE718;" FontFamily="Segoe MDL2 Assets" />
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="lbl" Property="Content" Value="&#xE840;"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                </StackPanel>
             </Grid>
-
-            <!--Hamburger Menu -->
-            <Button Command="{Binding hamburgClickCommand}"
-                FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Style="{StaticResource ChromelessButtonStyle}"
-                    VerticalAlignment="Top" Margin="5"/>
-
         </Grid>
+        <view:LoadingOverlayView Visibility="{Binding IsLoading, Converter={StaticResource booleanToVisibilityConverter}}" d:IsHidden="True"/>
     </Grid>
 </Controls:MetroWindow>
