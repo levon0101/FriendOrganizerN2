@@ -9,7 +9,7 @@
         xmlns:view="clr-namespace:FriendOrganizerN2.UI.View"
         xmlns:viewModel="clr-namespace:FriendOrganizerN2.UI.ViewModel"
         mc:Ignorable="d"
-        Title="FriendOrganizerN2" Height="700" Width="1000" FontSize="20"
+        Title="FriendOrganizerN2" Height="700" Width="1000" FontSize="20" TitleCaps="False"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:FriendDetailViewModel}">
@@ -62,7 +62,10 @@
                         <ColumnDefinition x:Name="columnAddOrRemove" SharedSizeGroup="navigationGroup"/>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TabControl Grid.Column="1"  ItemsSource="{Binding DetailViewModels}" 
+                    
+                    <Controls:MetroTabControl Controls:TabControlHelper.Transition="up"
+                                              Controls:TabControlHelper.Underlined="TabPanel"
+                        Grid.Column="1"  ItemsSource="{Binding DetailViewModels}" 
                     SelectedItem="{Binding SelectedDetailViewModel, Mode=TwoWay}">
                         <i:Interaction.Triggers>
 
@@ -80,7 +83,7 @@
                                 <Setter Property="BorderThickness" Value="2" />
                             </Style>
                         </TabControl.ItemContainerStyle>
-                        <TabControl.ItemTemplate>
+                        <Controls:MetroTabControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" >
                                     <TextBlock Text="{Binding Title}" />
@@ -91,8 +94,8 @@
 
                                 </StackPanel>
                             </DataTemplate>
-                        </TabControl.ItemTemplate>
-                    </TabControl>
+                        </Controls:MetroTabControl.ItemTemplate>
+                    </Controls:MetroTabControl>
                 </Grid>
 
 

@@ -73,23 +73,23 @@
 
     <Grid Background="Black">
         <Grid.RowDefinitions>
-            <RowDefinition Height="300"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="Friends">
+        <Expander Header="Friends">
             <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding Friends}" 
                               ItemContainerStyle="{StaticResource NaviItemContainerStyle}"
                               ItemTemplate="{StaticResource NaviItemTemplate}"
                               Margin="5 0"/>
             </ScrollViewer>
-        </GroupBox>
+        </Expander>
         
-        <GroupBox Grid.Row="1" Header="Meetings">
+        <Expander Grid.Row="1" Header="Meetings">
             <ScrollViewer  VerticalScrollBarVisibility="Auto" 
                            HorizontalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding Meetings}" ItemContainerStyle="{StaticResource NaviItemContainerStyle}"
@@ -104,7 +104,7 @@
                 </ItemsControl>
 
             </ScrollViewer>
-        </GroupBox>
+        </Expander>
 
         <!--<Button  Content="{Binding PinButtonContent}" Command="{Binding PinClickCommand}" FontFamily="Segoe MDL2 Assets" Grid.Column="1"
                 Style="{StaticResource ChromelessButtonStyle}" VerticalAlignment="Top" Margin="5" />-->
